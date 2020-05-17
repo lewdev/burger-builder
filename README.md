@@ -1,5 +1,15 @@
 # burger-builder
-A simple burger-building game compatible across nearly any resolution with sound effects.
+A simple burger-building game compatible across nearly any resolution with sound effects. This was made using vanilla JavaScript and HTML5 Canvas.
+
+## Screenshots
+
+<table><tbody>
+  <tr>
+    <td><img src="https://github.com/lewdev/burger-builder/raw/master/src/images/burger-builder-start-screen.png"></td>
+    <td><img src="https://github.com/lewdev/burger-builder/raw/master/src/images/burger-builder-game-screen.png"></td>
+    <td><img src="https://github.com/lewdev/burger-builder/raw/master/src/images/burger-builder-end-screen.png"></td>
+  </tr>
+</tbody></table>
 
 ## Next Features
 * Level select with increase difficulty levels
