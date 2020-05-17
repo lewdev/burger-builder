@@ -1,12 +1,12 @@
-var Sound = {
-  PATH: "./audio/"
-  , MUSIC_VOLUME: .1
-  , lastSoundName: null
-  , lastMusicName: null
+var Sound = (function() {
+  const PATH = "./audio/";
+  const MUSIC_VOLUME = .1;
+  let lastSoundName = null;
+  let lastMusicName = null;
   //map of sound names to audio.
-  , audio: null
+  let audioMap = null;
   //map of sound names to their file names.
-  , map: {
+  const nameMap = {
     "addPart":       "addPart - Jump 1.wav"
     , "clear":       "clear - Select 1.wav"
     , "endGame":     "endGame - Victory SoundFX2.ogg"
@@ -14,59 +14,65 @@ var Sound = {
     , "noMatch":     "noMatch - Text 1.wav"
     , "gameBgMusic": "game - POL-star-way-short.wav"
     , "menuBgMusic": "menu - POL-follow-me-short.wav"
-  }
-  , init: function(callback) {
-    if (!Sound.audio) {
-      Sound.audio = {};    
-      for (var name in Sound.map) {
-        Sound.audio[name] = new Audio(Sound.PATH + Sound.map[name]);
+  };
+  function init(callback) {
+    if (!audioMap) {
+      audioMap = {};    
+      for (var name in nameMap) {
+        audioMap[name] = new Audio(PATH + nameMap[name]);
       }
     }
     callback();
   }
-  , play: function(soundName) {
-    Sound.stop(Sound.lastSoundName);
-    const audio = Sound.getAudio(soundName);
+  function play(soundName) {
+    stop(lastSoundName);
+    const audio = getAudio(soundName);
     if (audio) {
       audio.play();
     }
-    Sound.lastSoundName = soundName;
+    lastSoundName = soundName;
   }
-  , music: function(soundName) {
-    Sound.stop(Sound.lastMusicName);
-    const audio = Sound.getAudio(soundName);
+  function music(soundName) {
+    stopMusic();
+    const audio = getAudio(soundName);
     if (audio) {
       audio.play();
       audio.loop = true;
-      audio.volume = Sound.MUSIC_VOLUME;
+      audio.volume = MUSIC_VOLUME;
     }
-    Sound.lastMusicName = soundName;
+    lastMusicName = soundName;
   }
-  , getAudio(soundName) {
-    const audio = Sound.audio[soundName];
+  function getAudio(soundName) {
+    if (!soundName) return null;
+    const audio = audioMap[soundName];
     if (!audio) {
-      console.log("Sound '" + soundName + "' not found");
+      console.error("Sound '" + soundName + "' not found");
       return null;
     }
     return audio;
   }
-  , stop: function(soundName) {
-    if (!soundName) {
-      return;
+  function stop(soundName) {
+    if (!soundName) return;
+    const audio = getAudio(soundName);
+    if (audio) {
+      audio.currentTime = 0;
+      audio.pause();
     }
-    const audio = Sound.audio[soundName];
-    if (!audio) {
-      console.log("Sound '" + soundName + "' not found");
-      return;
+  }
+  function stopMusic() {
+    const audio = getAudio(lastMusicName);
+    if (audio) {
+      audio.pause();
     }
-    audio.pause();
-    //audio.currentTime = 0;
   }
-  , stopMusic: function() {
-    Sound.stop(Sound.lastMusicName);
+  function playMusic() {
+    music(lastMusicName);
   }
-  , playMusic: function() {
-    console.log("Sound.lastMusicName=" + Sound.lastMusicName);
-    Sound.music(Sound.lastMusicName);
+  return {
+    init: init
+    , stopMusic: stopMusic
+    , playMusic: playMusic
+    , play: play
+    , music: music
   }
-};
+})();

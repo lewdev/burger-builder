@@ -2,11 +2,12 @@ let canvas = null;
 let ctx = null;
 var burgerBuilder = (function() {
   const APP_DATA_KEY = "burger-builder";
-  const SCREEN_WIDTH_UNIT = 100;
+  const SCREEN_UNITS = 110;
   const BGCOLOR = Colors.BLACK;
   const CONTENT_BOX_SIZE = 8;
   const MODE = { START: 1, GAME: 2, END: 3 };
-  const LOOP_MS = 50;
+  const LOOP_MS = 10;
+  const DEFAULT_FONT = "Tahoma";//"Georgia";//"Arial";//Courier New//Comic Sans MS
   let buttons = {};
   let currentMode = MODE.START;
   let unitSize;
@@ -19,14 +20,14 @@ var burgerBuilder = (function() {
   let alertMsg = false;
   let data = {
     "currGame": {
-      "rounds": 5
+      "roundCount": 5
       , "time": 0
       , "level": 1
       , "currRound": {
-        "targetBurgerArr": ["bottomBun", "tomato", "cheese", "onion", "burger", "lettuce", "topBun"]
-        , "burgerArr": ["bottomBun", "tomato", "cheese", "onion", "burger", "lettuce", "topBun"]
+        "targetBurgerArr": []
+        , "burgerArr": []
       }
-      , "history": []
+      , "rounds": []
     }
     , "muteSound": false
     , "muteMusic": false
@@ -46,7 +47,6 @@ var burgerBuilder = (function() {
     ctx = canvas.getContext("2d");
     document.body.insertBefore(canvas, document.body.childNodes[0]);
     //resize listener
-    resizeCanvas();
     window.addEventListener('resize', function () { resizeCanvas(); });
     //mouse click listener
     window.addEventListener('click', function (e) { handleMouseDown(e) });
@@ -54,6 +54,9 @@ var burgerBuilder = (function() {
     // window.addEventListener('mouseup', function (e) { handleMouseEnd(e) });
     window.addEventListener('touchstart', function (e) { handleMouseDown(e) });
     // window.addEventListener('touchend', function (e) { handleMouseEnd(e) });
+
+    //init things
+    resizeCanvas();
     initButtons();
     gotoStart();
   }
@@ -70,6 +73,7 @@ var burgerBuilder = (function() {
   function toggleMuteSound() {
     data["muteSound"] = !data["muteSound"];
     buttons["toggleMuteSound"].text = "Sound " + (data["muteSound"] ? "Off" : "On");
+    saveData();
   }
   function toggleMuteMusic() {
     data["muteMusic"] = !data["muteMusic"];
@@ -80,6 +84,7 @@ var burgerBuilder = (function() {
       Sound.playMusic();
     }
     buttons["toggleMuteMusic"].text = "Music " + (data["muteMusic"] ? "Off" : "On");
+    saveData();
   }
   function initButtons() {
     buttons = {
@@ -87,7 +92,7 @@ var burgerBuilder = (function() {
         x: "center", y: 30
         , w: 22, h: 12
         , position: "bottom"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 8
         , color: Colors.DARKBLUE
         , mode: MODE.START
@@ -97,7 +102,7 @@ var burgerBuilder = (function() {
         x: 30, y: 33
         , w: 20, h: 6
         , position: "bottom-center"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 4
         , color: Colors.GRAY
         , mode: MODE.START
@@ -107,7 +112,7 @@ var burgerBuilder = (function() {
         x: 30, y: 26
         , w: 20, h: 6
         , position: "bottom-center"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 4
         , color: Colors.GRAY
         , mode: MODE.START
@@ -117,7 +122,7 @@ var burgerBuilder = (function() {
         x: "center", y: 15
         , w: 40, h: 12
         , position: "bottom"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 8
         , color: Colors.DARKBLUE
         , mode: MODE.END
@@ -127,7 +132,7 @@ var burgerBuilder = (function() {
         x: -36, y: 15
         , w: 22, h: 12
         , position: "bottom-center"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 8
         , color: Colors.GRAY
         , mode: MODE.END
@@ -137,7 +142,7 @@ var burgerBuilder = (function() {
         x: -36, y: 30
         , w: 22, h: 12
         , position: "bottom-center"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 8
         , color: Colors.DARKBLUE
         , mode: MODE.GAME
@@ -147,7 +152,7 @@ var burgerBuilder = (function() {
         x: -36, y: 10
         , w: 22, h: 12
         , position: "center"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 8
         , color: Colors.GRAY
         , mode: MODE.GAME
@@ -157,7 +162,7 @@ var burgerBuilder = (function() {
         x: 0, y: 30
         , w: 22, h: 12
         , position: "bottom-center"
-        , font: "Arial"
+        , font: DEFAULT_FONT
         , fontSize: 8
         , color: Colors.DARKBLUE
         , mode: MODE.GAME
@@ -165,11 +170,11 @@ var burgerBuilder = (function() {
       })
       //, "submit": new Button()
     };
-    const buttonNameArr = ["bottomBun", "burger", "cheese", "tomato", "onion", "lettuce", "topBun"];
+    const partNameBtnArr = ["bottomBun", "burger", "cheese", "tomato", "onion", "lettuce", "topBun"];
     const SPACED_BY = 12;
-    let x = -36, i, size = buttonNameArr.length;
+    let x = -36, i, size = partNameBtnArr.length;
     for (i = 0; i < size; i++) {
-      createPartBtn(buttonNameArr[i], x, 12);
+      createPartBtn(partNameBtnArr[i], x, 12);
       x += SPACED_BY;
     }
   }
@@ -186,7 +191,7 @@ var burgerBuilder = (function() {
       x: x, y: y
       , w: 10, h: 10
       , position: "bottom-center"
-      , font: "Arial"
+      , font: DEFAULT_FONT
       , fontSize: 8
       , rounded: rounded
       , color: part.color
@@ -226,7 +231,7 @@ var burgerBuilder = (function() {
         });
         if (btn.text) {
           Draw.text(btn.text, { x: x, y: y + (fontSize * .3),
-            w: btn.w, h: btn.h, fontSize: fontSize
+            w: btn.w, h: btn.h, fontSize: fontSize, fontStyle: btn.font
             , align: "center", color: Colors.DOWNYBLUE });
         }
       }
@@ -239,12 +244,12 @@ var burgerBuilder = (function() {
   }
   function startGame() {
     data["currGame"] = {
-      "rounds": 3
+      "roundCount": 3
       , "level": 1
       , "startTime": (new Date()).getTime()
       , "time": 0
-      , "currRound": generateRound()
-      , "history": []
+      , "currRound": generateRound(Rand.range(2, 6))
+      , "rounds": []
     };
     message("START", Colors.GREEN);
     currentMode = MODE.GAME;
@@ -252,10 +257,10 @@ var burgerBuilder = (function() {
   }
   function startRound() {
     const currGame = data["currGame"];
-    const roundsSoFar = currGame["history"].length;
-    console.log("roundsSoFar=" + roundsSoFar);
-    if (roundsSoFar < currGame["rounds"]) {
-      currGame["currRound"] = generateRound();
+    const roundsSoFar = currGame["rounds"].length;
+    //console.log("roundsSoFar=" + roundsSoFar);
+    if (roundsSoFar < currGame["roundCount"]) {
+      currGame["currRound"] = generateRound(Rand.range(2, 6));
     }
     else {
       console.log("GAME IS DONE");
@@ -270,15 +275,14 @@ var burgerBuilder = (function() {
     data["history"].push(currGame);
     saveData();
   }
-  function generateRound() {
+  function generateRound(burgerSize) {
     return {
-      "targetBurgerArr": generateBurger()
+      "targetBurgerArr": generateBurger(burgerSize)
       , "burgerArr": []
     }
   }
-  function generateBurger() {
+  function generateBurger(burgerSize) {
     const burgerArr = ["bottomBun"];
-    const burgerSize = Rand.range(2, 6);
     let i;
     for (i = 0; i < burgerSize; i++) {
       burgerArr.push(Rand.arr(burgerData.ingredientArr()));
@@ -290,10 +294,10 @@ var burgerBuilder = (function() {
     mouseClickX = e.pageX;
     mouseClickY = e.pageY;
   }
-  function handleMouseEnd(e) {
-    mouseClickX = false;
-    mouseClickY = false;
-  }
+  // function handleMouseEnd() {
+  //   mouseClickX = false;
+  //   mouseClickY = false;
+  // }
   function loop() {
     mouse();
     render();
@@ -338,10 +342,10 @@ var burgerBuilder = (function() {
       case MODE.GAME: drawGameMode(); break;
       case MODE.END: drawEndMode(); break;
     }
-    drawmessage();
+    drawMessage();
     drawButtons();
   }
-  function drawmessage() {
+  function drawMessage() {
     if (alertMsg) {
       const duration = 1000;
       const fade = 1000;
@@ -366,9 +370,13 @@ var burgerBuilder = (function() {
     let fontSize = unitSize * 10;
     const color = Colors.PABLOBROWN;
     const x = screenCenterX;
-    let y = screenCenterY - unitSize * 15;
-    Draw.text("🍔", { x: x, y: y, fontSize: unitSize * 20, align: "center", color: color });
-    y += fontSize * 1.2;
+    let y = screenCenterY - unitSize * 20;
+
+    //console.log(burgerArr);
+    drawBurger(burgerData.partsArr(), x, y, .7);
+
+    //Draw.text("🍔", { x: x, y: y, fontSize: unitSize * 20, align: "center", color: color });
+    y += unitSize * 20;
     Draw.text("Burger Builder", { x: x, y: y, fontSize: fontSize, align: "center", color: color });
 
     y = screenHeight - unitSize * 6;
@@ -410,18 +418,19 @@ var burgerBuilder = (function() {
     Draw.text(
       "Time: " + timeStr
       + ", Level: " + currGame["level"]
-      + ", Rounds: " + currGame["rounds"]
+      + ", Rounds: " + currGame["rounds"].length
       , { x: x, y: y, fontSize: fontSize * .5, align: "center", color: color });
     let i, burgerArr, col = 0;
     const scale = .3;
     const COL_COUNT = 3;
     const COL_WIDTH = unitSize * 30;
     const COL_HEIGHT = unitSize * 20;
-    const size = currGame["history"].length;
+    const size = currGame["rounds"].length;
     y = y + (COL_WIDTH / 2);
     x = screenCenterX - COL_WIDTH;
     for (i = 0; i < size; i++) {
-      burgerArr = currGame["history"][i];
+      burgerArr = currGame["rounds"][i]["burgerArr"];
+      //console.log(burgerArr);
       drawBurger(burgerArr, x, y, scale);
       if (++col === COL_COUNT) {
         col = 0;
@@ -503,7 +512,7 @@ var burgerBuilder = (function() {
     }
     //alert message
     if (match) {
-      data["currGame"]["history"].push(burger);
+      data["currGame"]["rounds"].push(data["currGame"]["currRound"]);
       message(Rand.arr(burgerData.compliments) + "!", Colors.GREEN);
       playSound("match");
       startRound();
@@ -566,10 +575,15 @@ var burgerBuilder = (function() {
     screenHeight = window.innerHeight;
     canvas.height = screenHeight;
     screenCenterY = screenHeight / 2;
-    unitSize = screenWidth / SCREEN_WIDTH_UNIT;
-    if (unitSize > 6.25) {
-      unitSize = 6.25;
+    if (screenWidth < screenHeight) {
+      unitSize = screenWidth / SCREEN_UNITS;
     }
+    else {
+      unitSize = screenHeight / SCREEN_UNITS;
+    }
+    // if (unitSize > 6.25) {
+    //   unitSize = 6.25;
+    // }
   }
   function saveData() {
     window.localStorage.setItem(APP_DATA_KEY, JSON.stringify(data));
