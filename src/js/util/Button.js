@@ -12,10 +12,12 @@ function Button(text, options) {
   this.w = options.w;
   this.h = options.h;
   this.font = options.font;
+  this.value = options.value; //value to hold
   this.fontSize = options.fontSize;
+  this.fontColor = options.fontColor;
   this.color = options.color;
   this.mode = options.mode;
-  this.hidden = false;
+  this.hidden = options.hidden || false;
   this.rounded = options.rounded || "both";
   this.unitSize = options.unitSize;
   this.position = options.position;

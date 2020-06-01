@@ -37,3 +37,7 @@ A simple burger-building game compatible across nearly any resolution with sound
 * [Background music from PlayOnLoop.com](https://www.playonloop.com/)
 
     Licensed under [Creative Commons by Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+* [8-bit / 16-bit Sound Effects (x25) Pack — JDWasabi](https://jdwasabi.itch.io/8-bit-16-bit-sound-effects-pack)
+
+    Sound effects for the game.

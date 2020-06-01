@@ -8,6 +8,7 @@ const Draw = (function() {
       , h: options.h * options.unitSize * options.scale
       , color: options.color
       , rounded: options.rounded
+      , opacity: options.opacity
     });
   }
   //utilities
@@ -41,6 +42,7 @@ const Draw = (function() {
       y = y + (options.radius * .5);
       h = h - options.radius;
     }
+    ctx.globalAlpha = options.opacity || 1;
     ctx.fillRect(x, y, w, h);
     ctx.stroke();
     ctx.fill();

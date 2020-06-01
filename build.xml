@@ -46,12 +46,18 @@
     <exec dir="." executable="cmd" >
       <arg line="/c npx google-closure-compiler"/>
       <arg line="--compilation_level ADVANCED_OPTIMIZATIONS"/>
-      <arg line="--js ./src/js/Sound.js"/>
-      <arg line="--js ./src/js/Rand.js"/>
-      <arg line="--js ./src/js/Button.js"/>
-      <arg line="--js ./src/js/Colors.js"/>
-      <arg line="--js ./src/js/Draw.js"/>
+      <arg line="--js ./src/js/util/Num.js"/>
+      <arg line="--js ./src/js/util/Sound.js"/>
+      <arg line="--js ./src/js/util/Rand.js"/>
+      <arg line="--js ./src/js/util/Button.js"/>
+      <arg line="--js ./src/js/util/Colors.js"/>
+      <arg line="--js ./src/js/util/Draw.js"/>
       <arg line="--js ./src/js/burgerData.js"/>
+      <arg line="--js ./src/js/Burger.js"/>
+      <arg line="--js ./src/js/screens/ScreenStart.js"/>
+      <arg line="--js ./src/js/screens/ScreenLevelSelect.js"/>
+      <arg line="--js ./src/js/screens/ScreenGame.js"/>
+      <arg line="--js ./src/js/screens/ScreenEnd.js"/>
       <arg line="--js ./src/script.js"/>
       <arg line="--js_output_file ./public/script.js"/>
     </exec>
