@@ -2,6 +2,7 @@ const ScreenEnd =  (function () {
   let data = null;
   const SCALE = .3;
   const COL_COUNT = 3;
+  const TIMES_X = "\u2716";
   function setData(dataArg) {
     data = dataArg;
   }
@@ -49,7 +50,7 @@ const ScreenEnd =  (function () {
         Burger.draw(burgerArr, x, y, SCALE, unitSize);
       }
       else {
-        Draw.text("🞮", { x, y: y + (unitSize * 3), fontSize: unitSize * 10, color: Colors.RED });
+        Draw.text(TIMES_X, { x, y: y + (unitSize * 3), fontSize: unitSize * 10, color: Colors.RED });
       }
       //rectangle for amount earned.
       Draw.roundedRectUnit({

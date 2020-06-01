@@ -9,7 +9,7 @@ const ScreenLevelSelect = (function() {
       const BTN_MARGIN = 5;
       const xStart =  screenCenterX - (((COLUMNS - 2) * (BTN_WIDTH + BTN_MARGIN)) * unitSize);
       const yStart =  ((26 + (BTN_WIDTH * .9)) * unitSize);
-      const bestLevels = data["bestLevels"];
+      const bestLevels = data["bestLevels"] || {};
       const fontSize = 5 * unitSize;
       let i, level, gameObj, stars
         , x = xStart

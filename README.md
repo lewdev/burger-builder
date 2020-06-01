@@ -1,5 +1,5 @@
 # burger-builder
-A simple burger-building game compatible across nearly any resolution with sound effects. This was made using vanilla JavaScript and HTML5 Canvas.
+A simple burger-building game compatible across nearly any resolution (HD, 4K, etc) on mobile or desktop with challenging levels. This was made using vanilla JavaScript and HTML5 Canvas.
 
 ## Screenshots
 
@@ -12,10 +12,18 @@ A simple burger-building game compatible across nearly any resolution with sound
 </tbody></table>
 
 ## Next Features
-* Level select with increase difficulty levels
-* Display past scores.
-* Give player rating on each level.
 * Achievements.
+* An ending or some visual reward for beating all 9 levels and maybe another for getting all the stars.
+* Store to buy stuff with the money earned.
+* Particle effects.
+* A story behind the game. That you're a burger chef wanting to build a franchise. You'll use the money to buy additional franchises, which will make it into an idle game.
+
+## Updates
+
+### Update May 31, 2020
+* Added levels. Need to beat previous levels before going to the next.
+* Star ratings per burger (round) and per game.
+* You earn money based on your performance.
 
 ## Resources Used
 * [Game Canvas - W3Schools](https://www.w3schools.com/graphics/game_canvas.asp)

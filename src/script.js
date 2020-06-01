@@ -133,7 +133,6 @@ var burgerBuilder = (function() {
     });
   }
   function initLevelSelectScreenBtns() {
-    setBestLevels();
     const mode = MODE.LEVEL_SELECT;
     buttons["backLvlSel"] = new Button("Back", {
       x: -36, y: 10
@@ -196,7 +195,8 @@ var burgerBuilder = (function() {
       , onclick: startGame
     });
     const isNextLeveUnlocked = isLevelUnlocked(data["currGame"]["level"] + 1);
-    buttons["nextLevel"] = new Button("Next 🡆", {
+    const RIGHT_ARROW = "\u27A1";
+    buttons["nextLevel"] = new Button("Next " + RIGHT_ARROW, {
       x: 36, y: 15
       , w: 30, h: 12
       , position: "bottom-center"
@@ -293,7 +293,6 @@ var burgerBuilder = (function() {
     let btn, x, y, fontSize, fontColor;
     for (var btnName in buttons) {
       btn = buttons[btnName];
-      console.log("btn.hidden=" + btn.hidden);
       if (!btn.hidden) {
         fontColor = btn.fontColor || Colors.DOWNYBLUE;
         if (btn.mode === currentMode) {
@@ -450,12 +449,11 @@ var burgerBuilder = (function() {
     saveData();
   }
   function endGame() {
-    setBestLevels();
+    applyGameResults(data["currGame"]);
     initEndScreenBtns();
     initLevelSelectScreenBtns();
     currentMode = MODE.END;
     playMusic("menuBgMusic");
-    applyGameResults(data["currGame"]);
     saveData();
   }
   function generateRound() {
@@ -638,6 +636,7 @@ var burgerBuilder = (function() {
       }
     }
     data["history"].push(game);
+    setBestLevels();
   }
   function applyRoundResults(round) {
     const time = round["time"];

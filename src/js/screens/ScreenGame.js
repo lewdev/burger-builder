@@ -1,4 +1,5 @@
 const ScreenGame = (function() {
+  const TIMES_X = "\u2716";
   function draw(unitSize, screenCenterX, screenCenterY, data) {
     drawTargetBurger(unitSize, screenCenterX, screenCenterY, data);
     drawCookingArea(unitSize, screenCenterX, screenCenterY, data);
@@ -45,9 +46,9 @@ const ScreenGame = (function() {
       , { x: screenCenterX + xOffset, y: yOffset, fontSize: fontSize, align: "center", color: Colors.REGENTGRAY });
     let fails = "";
     switch (data["currGame"]["failCount"]) {
-      case 1: fails = "🞮"; break;
-      case 2: fails = "🞮 🞮"; break;
-      case 3: fails = "🞮 🞮 🞮"; break;
+      case 1: fails = `${TIMES_X}`; break;
+      case 2: fails = `${TIMES_X} ${TIMES_X}`; break;
+      case 3: fails = `${TIMES_X} ${TIMES_X} ${TIMES_X}`; break;
     }
     if (fails) {
       Draw.text(fails, { x: screenCenterX + xOffset, y: yOffset + (fontSize * 1.2), fontSize: fontSize, align: "center", color: Colors.RED });

@@ -1,5 +1,7 @@
 const Burger = (function() {
   const CONTENT_BOX_SIZE = 8;
+  const STAR_FILLED =  "\u2605";//"\uD83D\uDFCA";
+  const STAR_OUTLINE = "\u2606";//"\u2729";
   function draw(burgerArr, x, y, scale, unitSize) {
     y = y - getBurgerHeight(burgerArr, scale, unitSize) / 2;
     let i, part, partName, prevPart;
@@ -94,11 +96,11 @@ const Burger = (function() {
   }
   function getStarsStr(starCount) {
     switch (starCount) {
-      case 1: return "🟊 ☆ ☆";
-      case 2: return "🟊 🟊 ☆";
-      case 3: return "🟊 🟊 🟊";
+      case 1: return `${STAR_FILLED} ${STAR_OUTLINE} ${STAR_OUTLINE}`;
+      case 2: return `${STAR_FILLED} ${STAR_FILLED} ${STAR_OUTLINE}`;
+      case 3: return `${STAR_FILLED} ${STAR_FILLED} ${STAR_FILLED}`;
     }
-    return "✰ ✰ ✰";
+    return `${STAR_OUTLINE} ${STAR_OUTLINE} ${STAR_OUTLINE}`;
   }
   return {
     draw: draw,

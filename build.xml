@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="html-css-js-template " default="build" basedir=".">
+<project name="burger-builder" default="build" basedir=".">
   <property environment="env" />
 
   <target name="build" depends="compile, copy-to-public" description="Build"/>
@@ -63,8 +63,15 @@
     </exec>
   </target>
 
+  <!-- npm i -g phonegap -->
   <target name="phonegap" depends="build-clean">
     <copy todir="./www"> <!-- overwrite="true" -->
+      <fileset dir="./public"/>
+    </copy>
+  </target>
+
+  <target name="github" depends="build-clean">
+    <copy todir="../lewdev.github.io/apps/${ant.project.name}"> <!-- overwrite="true" -->
       <fileset dir="./public"/>
     </copy>
   </target>
@@ -74,8 +81,6 @@
       <zipfileset dir="./" includes="www/** config.xml" />
     </zip>
   </target>
-
-  <target name="cordova" />
 
   <target name="install-compilers">
     <exec dir="." executable="cmd" >
