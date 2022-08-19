@@ -49,3 +49,7 @@ A simple burger-building game compatible across nearly any resolution (HD, 4K, e
 * [8-bit / 16-bit Sound Effects (x25) Pack — JDWasabi](https://jdwasabi.itch.io/8-bit-16-bit-sound-effects-pack)
 
     Sound effects for the game.
+    
+* [JavaScript Basics - Scaler Topics](https://www.scaler.com/topics/javascript/)
+
+    Resource for learning JavaScript basics
